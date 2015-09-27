@@ -10,6 +10,7 @@ The game would have the following features:
 
 ### Sketches
 The following screens would be visible for the player:
+
 ![Menu](https://raw.githubusercontent.com/ruben-kruiver/AndroidMemory/master/Documentation/images/Menu.png "Main Menu")
 ![Gameplay practice choice](https://raw.githubusercontent.com/ruben-kruiver/AndroidMemory/master/Documentation/images/PracticeChoice.png "Choice screen for practice game")
 ![Gameplay practice](https://raw.githubusercontent.com/ruben-kruiver/AndroidMemory/master/Documentation/images/Practice.png "Practice game")
