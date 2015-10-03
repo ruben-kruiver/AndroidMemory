@@ -16,7 +16,7 @@ The game consists of the following activities:
 * Settings
 
 The underlying logic that applies to the gameplay will be handled by a set of models. The design of these models can be found in the classdiagram located at
-[GitHub](https://raw.githubusercontent.com/ruben-kruiver/AndroidMemory/master/Documentation/Classdiagram.pdf)
+[GitHub](https://github.com/ruben-kruiver/AndroidMemory/blob/master/Documentation/ClassDiagram.pdf)
 
 In this design there is chosen to intergrate a factory method in the model class Game that creates the cards that will be used in the current game. This model class has been chosen because it has the most relevant information about the cards that need to be used in the game, aswell as the size and layout of the grid.
 
@@ -55,7 +55,6 @@ The application doesn't require any extra rights to function properly. It also d
 The following screens would be visible for the player:
 
 ![Menu](https://raw.githubusercontent.com/ruben-kruiver/AndroidMemory/master/Documentation/images/Menu.png "Main Menu")
-![Gameplay practice choice](https://raw.githubusercontent.com/ruben-kruiver/AndroidMemory/master/Documentation/images/PracticeChoice.png "Choice screen for practice game")
 ![Gameplay practice](https://raw.githubusercontent.com/ruben-kruiver/AndroidMemory/master/Documentation/images/Practice.png "Practice game")
 ![Gameplay challenge](https://raw.githubusercontent.com/ruben-kruiver/AndroidMemory/master/Documentation/images/Challenge.png "Challenge game")
 ![Settings](https://raw.githubusercontent.com/ruben-kruiver/AndroidMemory/master/Documentation/images/Settings.png "Settings screen")
