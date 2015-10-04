@@ -11,12 +11,20 @@ The AndroidMemory project is designed and build for Android smartphones supporte
 
 ### Tech
 The game consists of the following activities:
-* MainMenu
-* Gameplay
-* Settings
+* MainMenu: In this activity the user will be able to select a type of game or to change the game settings
 
-The underlying logic that applies to the gameplay will be handled by a set of models. The design of these models can be found in the classdiagram located at
-[GitHub](https://github.com/ruben-kruiver/AndroidMemory/blob/master/Documentation/ClassDiagram.pdf)
+![Menu](https://raw.githubusercontent.com/ruben-kruiver/AndroidMemory/master/Documentation/images/Menu.png "Main Menu")
+* Gameplay: This activity can be called from either the Practive or the Challenge menu item. Depending on the selection the game will start with the appropriate gamestate, that can be found in the below class diagram.
+
+![Gameplay practice](https://raw.githubusercontent.com/ruben-kruiver/AndroidMemory/master/Documentation/images/Practice.png "Practice game")
+![Gameplay challenge](https://raw.githubusercontent.com/ruben-kruiver/AndroidMemory/master/Documentation/images/Challenge.png "Challenge game")
+* Settings: In this screen the player can change the game settings
+
+![Settings](https://raw.githubusercontent.com/ruben-kruiver/AndroidMemory/master/Documentation/images/Settings.png "Settings screen")
+
+The underlying logic that applies to the gameplay will be handled by a set of models. The image below is the basic class diagram that is used in the design of the memory game. This gives a global overview which classes are involved and how they are related. 
+
+![Class Diagram](https://raw.githubusercontent.com/ruben-kruiver/AndroidMemory/master/Documentation/images/Classdiagran.png "Class Diagram")
 
 In this design there is chosen to intergrate a factory method in the model class Game that creates the cards that will be used in the current game. This model class has been chosen because it has the most relevant information about the cards that need to be used in the game, aswell as the size and layout of the grid.
 
@@ -50,11 +58,3 @@ AndroidMemory uses only standard Java and Android libraries. The logic side of t
 
 ## Rights
 The application doesn't require any extra rights to function properly. It also doesn't need an internet connection in order for it to work.
-
-### Screen sketches
-The following screens would be visible for the player:
-
-![Menu](https://raw.githubusercontent.com/ruben-kruiver/AndroidMemory/master/Documentation/images/Menu.png "Main Menu")
-![Gameplay practice](https://raw.githubusercontent.com/ruben-kruiver/AndroidMemory/master/Documentation/images/Practice.png "Practice game")
-![Gameplay challenge](https://raw.githubusercontent.com/ruben-kruiver/AndroidMemory/master/Documentation/images/Challenge.png "Challenge game")
-![Settings](https://raw.githubusercontent.com/ruben-kruiver/AndroidMemory/master/Documentation/images/Settings.png "Settings screen")
