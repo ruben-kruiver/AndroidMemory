@@ -24,7 +24,7 @@ The game consists of the following activities:
 
 The underlying logic that applies to the gameplay will be handled by a set of models. The image below is the basic class diagram that is used in the design of the memory game. This gives a global overview which classes are involved and how they are related. 
 
-![Class Diagram](https://raw.githubusercontent.com/ruben-kruiver/AndroidMemory/master/Documentation/images/Classdiagran.png "Class Diagram")
+![Class Diagram](https://raw.githubusercontent.com/ruben-kruiver/AndroidMemory/master/Documentation/images/ClassDiagram.png "Class Diagram")
 
 In this design there is chosen to intergrate a factory method in the model class Game that creates the cards that will be used in the current game. This model class has been chosen because it has the most relevant information about the cards that need to be used in the game, aswell as the size and layout of the grid.
 
