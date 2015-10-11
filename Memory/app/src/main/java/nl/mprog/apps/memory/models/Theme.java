@@ -1,64 +1,163 @@
 package nl.mprog.apps.memory.models;
 
+import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
+import android.util.Log;
+
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.security.DigestInputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
+
+import nl.mprog.apps.memory.exceptions.InvalidThemeException;
 
 public class Theme {
 
     protected String themeFolder;
 
-    protected HashMap<Integer, File> imagePaths;
+    protected String externalStorageFolder;
 
-    protected String backSideImage;
+    protected ArrayList<File> imagePaths;
 
-    protected String backgroundImage;
+    protected File backSideImage;
 
-    public Theme(String themeFolder) {
+    protected File backgroundImage;
+
+    protected Context context;
+
+    public Theme(Context context, String themeFolder) throws InvalidThemeException {
+        this.context = context;
         this.themeFolder = themeFolder;
+        this.externalStorageFolder = Environment.getExternalStorageDirectory().toString()
+                                        + File.separator + themeFolder;
+
+        this.load();
+        this.validateTheme();
     }
 
-    protected void load() {
-        File folder = new File(this.themeFolder);
-        File[] listOfFiles = folder.listFiles();
+    public File getBackgroundImage() {
+        return this.backgroundImage;
+    }
 
-        ArrayList<File> files = new ArrayList();
+    public File getBackSideImage    () {
+        return this.backSideImage;
+    }
+
+    public File getFrontSideFor(Integer index) {
+        return this.imagePaths.get(index);
+    }
+
+    protected boolean isImage(File file) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(file.getPath(), options);
+        return options.outWidth != -1 && options.outHeight != -1;
+    }
+
+    protected void load() throws InvalidThemeException {
+        if (!this.validateExternalStorage()) {
+            this.moveToExternalStorage();
+        }
+
+        File folder = new File(Environment.getExternalStorageDirectory().toString(), Memory.THEMES_RESOURCE_FOLDER + File.separator + this.themeFolder);
+        if (!folder.exists()) {
+            throw new InvalidThemeException();
+        }
+
+        File[] listOfFiles = folder.listFiles();
+        this.imagePaths = new ArrayList();
 
         for (File file : listOfFiles) {
-            files.add(file);
+            if (!this.isImage(file)) { continue; }
+
+            switch (file.getName()) {
+                case "background.png": this.backgroundImage = file; break;
+                case "backside.png": this.backSideImage = file; break;
+                default:
+                    this.imagePaths.add(file);
+            }
         }
     }
 
+    /**
+     * This method validates the contents of the theme folder.
+     */
+    protected void validateTheme() throws InvalidThemeException {
+        if (this.backSideImage == null
+                || this.backgroundImage == null
+                || this.imagePaths.size() < 10) {
+            throw new InvalidThemeException();
+        }
+    }
 
-    protected String getMD5Checksum(String filepath) {
-        String hash = "";
+    protected void moveToExternalStorage() {
+        try {
+            String themePath = Memory.THEMES_RESOURCE_FOLDER + File.separator + this.themeFolder;
+            String[] content = this.context.getAssets().list(themePath);
+
+            if (content.length > 0) {
+                for (String filename : content) {
+                    this.moveFileToExternalStorage(themePath + File.separator + filename);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void moveFileToExternalStorage(String filename) {
+        String basepath = Environment.getExternalStorageDirectory().toString();
 
         try {
-            MessageDigest md = MessageDigest.getInstance("MD5");
+            File file = new File(basepath, filename);
+            InputStream is = this.context.getAssets().open(filename);
+            FileOutputStream os = new FileOutputStream(file);
 
-            FileInputStream is = new FileInputStream(filepath);
-            DigestInputStream dis = new DigestInputStream(is, md);
+            byte[] buffer = new byte[65536 * 2];
+            int read;
+            while ((read = is.read(buffer)) != -1) {
+                os.write(buffer, 0, read);
+            }
 
-            byte[] dataBytes = new byte[1024];
+            is.close();
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+            Log.e("Error", e.getLocalizedMessage());
+        }
+    }
 
-            int nread = 0;
+    protected boolean validateExternalStorage() {
+        File folder = new File(Environment.getExternalStorageDirectory().toString(), Memory.THEMES_RESOURCE_FOLDER + File.separator + this.themeFolder);
 
-            while ((nread = dis.read(dataBytes)) != -1) {
-                md.update(dataBytes, 0, nread);
-            };
+        if (!folder.exists()) {
+            folder.mkdirs();
 
-            byte[] digest = md.digest();
+            if (!folder.exists()) {
+                Log.e("Error", "Could not create folder");
+            }
 
-            hash = new String(digest);
-        } catch (IOException | NoSuchAlgorithmException ex) {
-            ex.printStackTrace();
+            return false;
         }
 
-        return hash;
+        String[] files = folder.list();
+
+        if (files.length == 0) { return false; }
+
+        boolean backgroundAvailable = false;
+        boolean backsideAvailable = false;
+        boolean cardsAvailable = false;
+
+        for (String filename : files) {
+            switch (filename) {
+                case "background.png": backgroundAvailable = true; break;
+                case "backside.png": backsideAvailable = true; break;
+                default : cardsAvailable = true; break;
+            }
+        }
+
+        return backgroundAvailable && backsideAvailable && cardsAvailable;
     }
 }

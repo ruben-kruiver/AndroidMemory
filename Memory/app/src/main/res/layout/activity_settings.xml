@@ -1,0 +1,151 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="nl.mprog.apps.memory.activities.Settings"
+    android:background="#e0e0e0">
+
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:stretchColumns="2">
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="20dp"
+            android:layout_column="0"
+            android:background="#262626"
+            android:baselineAligned="true">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:text="@string/title_global_settings"
+                android:id="@+id/globalSettingsHeader"
+                android:layout_column="2"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="#e0e0e0"
+                android:textStyle="bold"
+                android:textIsSelectable="false" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:paddingTop="10dp"
+            android:baselineAligned="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_cards_per_set"
+                android:textColor="#262626"
+                android:id="@+id/labelCardsPerSet" />
+
+            <SeekBar
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/settingsCardsPerSet"
+                android:layout_column="1"
+                android:max="4"
+                android:indeterminate="false" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:paddingTop="10dp"
+            android:baselineAligned="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_theme"
+                android:textColor="#262626"
+                android:id="@+id/labelTheme" />
+
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#262626"
+                android:id="@+id/settingsTheme" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="20dp"
+            android:layout_column="0"
+            android:paddingTop="10dp"
+            android:background="#262626"
+            android:baselineAligned="true">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:text="@string/title_challenge_settings"
+                android:id="@+id/challengeSettingsHeader"
+                android:layout_column="2"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="#e0e0e0"
+                android:textStyle="bold"
+                android:textIsSelectable="false" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:paddingTop="10dp"
+            android:baselineAligned="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_max_mistakes"
+                android:textColor="#262626"
+                android:id="@+id/labelMaxMistakes" />
+
+            <SeekBar
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/settingsMaxMistakes"
+                android:max="6"
+                android:layout_column="1" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_column="2"
+            android:paddingTop="10dp"
+            android:baselineAligned="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/settings_timelimit"
+                android:textColor="#262626"
+                android:id="@+id/labelTimeLimit" />
+
+            <SeekBar
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/settingsTimelimit"
+                android:max="120"
+                android:layout_column="1" />
+        </TableRow>
+    </TableLayout>
+</RelativeLayout>
