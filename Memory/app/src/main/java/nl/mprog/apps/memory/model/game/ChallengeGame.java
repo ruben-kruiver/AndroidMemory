@@ -1,33 +1,31 @@
-package nl.mprog.apps.memory.models.game;
+package nl.mprog.apps.memory.model.game;
 
-import android.content.Context;
-
-import nl.mprog.apps.memory.interfaces.Game;
-import nl.mprog.apps.memory.models.Memory;
+import nl.mprog.apps.memory.basemodel.Game;
+import nl.mprog.apps.memory.model.Memory;
 
 /**
- * This Game type set the number of cards, currentTime and the maximummistakes
+ * This Game type sets the number of cards, currentTime and the maximum mistakes
  * the values will vary in blocks of three levels where the number of cards
  * will increase and the currentTime and number of mistakes will decrease
  */
 public class ChallengeGame extends Game {
-    protected Integer maximumTimeLimit;
 
-    protected Integer mistakesLimit;
-
-    public ChallengeGame(Context context) {
-        super(context);
+    public ChallengeGame() {
+        super();
     }
 
     @Override
     public void loadPlayingCards() {
-        if (this.maximumTimeLimit == null) {
-            this.maximumTimeLimit = this.timeLimit;
-            this.mistakesLimit = this.maximumMistakes;
+        if (this.currentTimelimit == null) {
+            this.currentTimelimit = this.timeLimit;
+        }
+
+        if (this.currentMistakesLimit == null) {
+            this.currentMistakesLimit = this.maximumMistakes;
         }
 
         for (int i = 0; i < this.getNumberOfCards(); i++) {
-            this.addCardToSet(i);
+            this.addCardToGame(i);
         }
 
         this.setTimeLimit(this.calculateTimelimit());
@@ -36,8 +34,8 @@ public class ChallengeGame extends Game {
     }
 
     @Override
-    public boolean hasTimeRemaining(int currentTime) {
-        return (this.maximumTimeLimit - currentTime) > 0;
+    public boolean hasTimeRemaining() {
+        return (this.currentTimelimit - this.getCurrentTime()) > 0;
     }
 
     @Override
@@ -50,18 +48,18 @@ public class ChallengeGame extends Game {
     }
 
     protected Integer calculateTimelimit() {
-        int timelimitDiff = this.maximumTimeLimit - Memory.MIN_VALUE_TIME_LIMIT;
+        int timelimitDiff = this.currentTimelimit - Memory.MIN_VALUE_TIME_LIMIT;
         int timeStepValue = ((int) Math.floor(timelimitDiff / 3));
         int stepCounter = this.currentLevel % 3;
 
-        return this.maximumTimeLimit - (stepCounter * timeStepValue);
+        return this.timeLimit - (stepCounter * timeStepValue);
     }
 
     protected Integer calculateMaximumMistakes() {
-        int mistakesDiff = this.mistakesLimit - Memory.MIN_VALUE_MISTAKES;
+        int mistakesDiff = this.currentMistakesLimit - Memory.MIN_VALUE_MISTAKES;
         int mistakesStepValue = ((int) Math.floor(mistakesDiff / 3));
         int stepCounter = this.currentLevel % 3;
 
-        return this.mistakesLimit - (stepCounter * mistakesStepValue);
+        return this.maximumMistakes - (stepCounter * mistakesStepValue);
     }
 }

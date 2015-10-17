@@ -1,2 +1,2 @@
-package nl.mprog.apps.memory.exceptions;
+package nl.mprog.apps.memory.exception;
 public class InvalidThemeException extends Exception {}

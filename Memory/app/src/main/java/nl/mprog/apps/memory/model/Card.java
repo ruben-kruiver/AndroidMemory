@@ -1,14 +1,17 @@
-package nl.mprog.apps.memory.models;
+package nl.mprog.apps.memory.model;
 
+import nl.mprog.apps.memory.view.CardView;
 
-import nl.mprog.apps.memory.views.CardView;
-
+/**
+ * This class contains the state of the current card
+ * as well as an index to image in the applied theme
+ */
 public class Card {
     protected boolean isVisible; // Flag if the frontside should be displayed
 
     protected Integer imageIndex; // The index that references to a theme index
 
-    protected boolean disabled; // Flag if the card should be allowed to toggle its visibility
+    protected boolean disabled;
 
     protected CardView cardView;
 
@@ -17,16 +20,16 @@ public class Card {
         this.disabled = false;
     }
 
-    public void setImageIndex(Integer index) {
-        this.imageIndex = index;
+    public void setCardView(CardView cardView) {
+        this.cardView = cardView;
     }
 
     public Integer getImageIndex() {
         return this.imageIndex;
     }
 
-    public void setCardView(CardView cardView) {
-        this.cardView = cardView;
+    public void setImageIndex(Integer index) {
+        this.imageIndex = index;
     }
 
     public void setVisible(Boolean visible) {

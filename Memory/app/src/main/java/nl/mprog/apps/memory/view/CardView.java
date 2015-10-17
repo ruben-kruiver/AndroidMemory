@@ -1,4 +1,4 @@
-package nl.mprog.apps.memory.views;
+package nl.mprog.apps.memory.view;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -10,9 +10,9 @@ import android.util.TypedValue;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import nl.mprog.apps.memory.models.Card;
-import nl.mprog.apps.memory.models.Memory;
-import nl.mprog.apps.memory.models.Theme;
+import nl.mprog.apps.memory.model.Card;
+import nl.mprog.apps.memory.model.Memory;
+import nl.mprog.apps.memory.model.Theme;
 
 public class CardView extends ImageView {
     protected Card card;
@@ -44,13 +44,13 @@ public class CardView extends ImageView {
         this.loadImage();
     }
 
-    public Integer getPositionIndex() {
-        return this.positionIndex;
-    }
-
     public void setTheme(Theme theme) {
         this.theme = theme;
         this.loadImage();
+    }
+
+    public Integer getPositionIndex() {
+        return this.positionIndex;
     }
 
     public void flipCard() {
@@ -69,7 +69,7 @@ public class CardView extends ImageView {
         }
 
         this.backSide = Uri.fromFile(this.theme.getBackSideImage());
-        this.frontSide = Uri.fromFile(this.theme.getFrontSideFor(this.card.getImageIndex()));
+        this.frontSide = Uri.fromFile(this.theme.getFrontSideImageFor(this.card.getImageIndex()));
 
         this.setVisibleImage();
     }

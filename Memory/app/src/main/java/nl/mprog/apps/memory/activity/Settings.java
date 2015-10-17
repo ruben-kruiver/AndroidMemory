@@ -1,4 +1,4 @@
-package nl.mprog.apps.memory.activities;
+package nl.mprog.apps.memory.activity;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -14,13 +14,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import nl.mprog.apps.memory.R;
-import nl.mprog.apps.memory.models.Memory;
+import nl.mprog.apps.memory.model.Memory;
 
 public class Settings extends Activity {
 
+    /**
+     * These attributes will be stored in the shared preferences
+     */
     protected Integer cardsPerSet;
 
-    protected Integer maxMistakes;
+    protected Integer maximumMistakes;
 
     protected Integer timeLimit;
 
@@ -28,10 +31,20 @@ public class Settings extends Activity {
 
     protected SharedPreferences sharedPreferences;
 
+    /**
+     * These attributes will define if the preferences
+     * are loaded and stored, to prevent double loading and storing
+     * without any changes
+     */
     protected boolean preferencesLoaded = false;
 
     protected boolean preferencesStored = true;
 
+    /**
+     * These attributes will hold the controls on the screen.
+     * The initialSpinnerDisplay is used to make sure the
+     * first call to the spinner value will be ignored on load
+     */
     protected boolean initialSpinnerDisplay = true;
 
     protected SeekBar sbCardsPerSet;
@@ -60,6 +73,30 @@ public class Settings extends Activity {
         this.storePreferences();
     }
 
+    protected void loadPreferences() {
+        this.sharedPreferences = this.getSharedPreferences(Memory.PREFERENCES, this.MODE_PRIVATE);
+
+        this.cardsPerSet = this.sharedPreferences.getInt(Memory.PREFERENCES_CARDS_PER_SET, Memory.DEFAULT_CARDS_PER_SET);
+        this.maximumMistakes = this.sharedPreferences.getInt(Memory.PREFERENCES_MAX_MISTAKES, Memory.DEFAULT_MAX_MISTAKES);
+        this.timeLimit = this.sharedPreferences.getInt(Memory.PREFERENCES_TIMELIMIT, Memory.DEFAULT_TIMELIMIT);
+        this.theme = this.sharedPreferences.getString(Memory.PREFERENCES_THEME, Memory.DEFAULT_THEME);
+
+        this.preferencesLoaded = true;
+    }
+
+    protected void storePreferences() {
+        SharedPreferences.Editor editor = this.sharedPreferences.edit();
+
+        editor.putInt(Memory.PREFERENCES_CARDS_PER_SET, this.cardsPerSet);
+        editor.putInt(Memory.PREFERENCES_MAX_MISTAKES, this.maximumMistakes);
+        editor.putInt(Memory.PREFERENCES_TIMELIMIT, this.timeLimit);
+        editor.putString(Memory.PREFERENCES_THEME, this.theme);
+
+        editor.commit();
+
+        this.preferencesStored = true;
+    }
+
     protected void loadControls() {
         this.sbMaxMistakes = (SeekBar) this.findViewById(R.id.settingsMaxMistakes);
         this.sbMaxMistakes.setMax(Memory.MAX_VALUE_MISTAKES);
@@ -74,10 +111,42 @@ public class Settings extends Activity {
     }
 
     protected void setDefaultValues() {
-        this.sbMaxMistakes.setProgress(this.maxMistakes);
+        this.sbMaxMistakes.setProgress(this.maximumMistakes);
         this.sbCardsPerSet.setProgress(this.cardsPerSet);
         this.sbTimelimit.setProgress(this.timeLimit);
         this.initThemeSpinner(spinnerTheme);
+    }
+
+    protected void initThemeSpinner(Spinner spinnerTimelimit) {
+        ArrayList<String> spinnerArray =  this.getThemes();
+
+        ArrayAdapter<String> adapter = new ArrayAdapter(
+                this, android.R.layout.simple_spinner_item, spinnerArray);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerTimelimit.setAdapter(adapter);
+
+        int initialPosition = adapter.getPosition(this.theme);
+        this.spinnerTheme.setSelection(initialPosition);
+    }
+
+    protected ArrayList<String> getThemes() {
+        ArrayList<String> themes = new ArrayList();
+
+        try {
+            Resources res = this.getResources();
+            String[] themeFolders = res.getAssets().list(Memory.THEMES_RESOURCE_FOLDER);
+
+            if (themeFolders.length > 0) {
+                for (String theme : themeFolders) {
+                    themes.add(theme);
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return themes;
     }
 
     protected void initControlListeners() {
@@ -115,7 +184,7 @@ public class Settings extends Activity {
             }
 
             Settings.this.preferencesStored = false;
-            Settings.this.maxMistakes = progress;
+            Settings.this.maximumMistakes = progress;
         }
 
         @Override
@@ -160,60 +229,4 @@ public class Settings extends Activity {
         @Override
         public void onNothingSelected(AdapterView<?> parent) {}
     };
-
-    protected void loadPreferences() {
-        this.sharedPreferences = this.getSharedPreferences(Memory.PREFERENCES, this.MODE_PRIVATE);
-
-        this.cardsPerSet = this.sharedPreferences.getInt(Memory.PREFERENCES_CARDS_PER_SET, Memory.DEFAULT_CARDS_PER_SET);
-        this.maxMistakes = this.sharedPreferences.getInt(Memory.PREFERENCES_MAX_MISTAKES, Memory.DEFAULT_MAX_MISTAKES);
-        this.timeLimit = this.sharedPreferences.getInt(Memory.PREFERENCES_TIMELIMIT, Memory.DEFAULT_TIMELIMIT);
-        this.theme = this.sharedPreferences.getString(Memory.PREFERENCES_THEME, Memory.DEFAULT_THEME);
-
-        this.preferencesLoaded = true;
-    }
-
-    protected void storePreferences() {
-        SharedPreferences.Editor editor = this.sharedPreferences.edit();
-
-        editor.putInt(Memory.PREFERENCES_CARDS_PER_SET, this.cardsPerSet);
-        editor.putInt(Memory.PREFERENCES_MAX_MISTAKES, this.maxMistakes);
-        editor.putInt(Memory.PREFERENCES_TIMELIMIT, this.timeLimit);
-        editor.putString(Memory.PREFERENCES_THEME, this.theme);
-
-        editor.commit();
-
-        this.preferencesStored = true;
-    }
-
-    protected void initThemeSpinner(Spinner spinnerTimelimit) {
-        ArrayList<String> spinnerArray =  this.getThemes();
-
-        ArrayAdapter<String> adapter = new ArrayAdapter(
-                this, android.R.layout.simple_spinner_item, spinnerArray);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerTimelimit.setAdapter(adapter);
-
-        int initialPosition = adapter.getPosition(this.theme);
-        this.spinnerTheme.setSelection(initialPosition);
-    }
-
-    protected ArrayList<String> getThemes() {
-        ArrayList<String> themes = new ArrayList();
-
-        try {
-            Resources res = this.getResources();
-            String[] themeFolders = res.getAssets().list(Memory.THEMES_RESOURCE_FOLDER);
-
-            if (themeFolders.length > 0) {
-                for (String theme : themeFolders) {
-                    themes.add(theme);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return themes;
-    }
 }

@@ -1,19 +1,17 @@
-package nl.mprog.apps.memory.models.game;
+package nl.mprog.apps.memory.model.game;
 
-import android.content.Context;
-
-import nl.mprog.apps.memory.interfaces.Game;
+import nl.mprog.apps.memory.basemodel.Game;
 
 public class PracticeGame extends Game {
 
-    public PracticeGame(Context context) {
-        super(context);
+    public PracticeGame() {
+        super();
     }
 
     @Override
     public void loadPlayingCards() {
         for (int i = 0; i < this.getNumberOfCards(); i++) {
-            this.addCardToSet(i);
+            this.addCardToGame(i);
         }
     }
 

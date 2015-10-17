@@ -20,10 +20,11 @@
     <string name="settings_max_mistakes">Maximum mistakes</string>
     <string name="settings_timelimit">Timelimit</string>
 
-    <string name="error_invalid_theme">The selected theme is invalid for this game</string>
+    <string name="error_invalid_theme">The selected theme is invalid for this game.</string>
+    <string name="error_persistence_failed">An error occurred and the last game state could not be saved.</string>
 
-    <string name="game_over">Game Over</string>
     <string name="game_success">Game Won</string>
+    <string name="game_failed">You did not complete the level within the time or chances available</string>
 
     <string name="header_time_progress">Time: </string>
     <string name="header_mistakes_progress">Mistakes: </string>

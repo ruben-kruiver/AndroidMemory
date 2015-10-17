@@ -1,11 +1,11 @@
-package nl.mprog.apps.memory.views;
+package nl.mprog.apps.memory.view;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.GridLayout;
 
-import nl.mprog.apps.memory.models.Theme;
+import nl.mprog.apps.memory.model.Theme;
 
 public class CardLayout extends GridLayout {
 

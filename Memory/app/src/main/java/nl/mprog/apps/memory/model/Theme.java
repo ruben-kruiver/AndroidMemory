@@ -1,4 +1,4 @@
-package nl.mprog.apps.memory.models;
+package nl.mprog.apps.memory.model;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import nl.mprog.apps.memory.exceptions.InvalidThemeException;
+import nl.mprog.apps.memory.exception.InvalidThemeException;
 
 public class Theme {
 
@@ -27,7 +27,7 @@ public class Theme {
 
     protected Context context;
 
-    public Theme(Context context, String themeFolder) throws InvalidThemeException {
+    public Theme(Context context, String themeFolder) throws InvalidThemeException, IOException {
         this.context = context;
         this.themeFolder = themeFolder;
         this.externalStorageFolder = Environment.getExternalStorageDirectory().toString()
@@ -45,20 +45,18 @@ public class Theme {
         return this.backSideImage;
     }
 
-    public File getFrontSideFor(Integer index) {
+    public File getFrontSideImageFor(Integer index) {
         return this.imagePaths.get(index);
     }
 
-    protected boolean isImage(File file) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(file.getPath(), options);
-        return options.outWidth != -1 && options.outHeight != -1;
-    }
+    /**
+     * These methods load the images from the themes to enable them
+     * to be displayed by the different views in the game
+     */
 
-    protected void load() throws InvalidThemeException {
+    protected void load() throws InvalidThemeException, IOException {
         if (!this.validateExternalStorage()) {
-            this.moveToExternalStorage();
+            this.moveThemeToExternalStorage();
         }
 
         File folder = new File(Environment.getExternalStorageDirectory().toString(), Memory.THEMES_RESOURCE_FOLDER + File.separator + this.themeFolder);
@@ -81,9 +79,13 @@ public class Theme {
         }
     }
 
-    /**
-     * This method validates the contents of the theme folder.
-     */
+    protected boolean isImage(File file) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(file.getPath(), options);
+        return options.outWidth != -1 && options.outHeight != -1;
+    }
+
     protected void validateTheme() throws InvalidThemeException {
         if (this.backSideImage == null
                 || this.backgroundImage == null
@@ -92,59 +94,22 @@ public class Theme {
         }
     }
 
-    protected void moveToExternalStorage() {
-        try {
-            String themePath = Memory.THEMES_RESOURCE_FOLDER + File.separator + this.themeFolder;
-            String[] content = this.context.getAssets().list(themePath);
-
-            if (content.length > 0) {
-                for (String filename : content) {
-                    this.moveFileToExternalStorage(themePath + File.separator + filename);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    protected void moveFileToExternalStorage(String filename) {
-        String basepath = Environment.getExternalStorageDirectory().toString();
-
-        try {
-            File file = new File(basepath, filename);
-            InputStream is = this.context.getAssets().open(filename);
-            FileOutputStream os = new FileOutputStream(file);
-
-            byte[] buffer = new byte[65536 * 2];
-            int read;
-            while ((read = is.read(buffer)) != -1) {
-                os.write(buffer, 0, read);
-            }
-
-            is.close();
-            os.flush();
-            os.close();
-        } catch (Exception e) {
-            Log.e("Error", e.getLocalizedMessage());
-        }
-    }
+    /**
+     * These methods are designed to move and validate the themes
+     * to the external storage to be able to load the throughout the game.
+     * This is done because the models otherwise can't get access to these files
+     * and the Theme won't be able to be displayed
+     */
 
     protected boolean validateExternalStorage() {
         File folder = new File(Environment.getExternalStorageDirectory().toString(), Memory.THEMES_RESOURCE_FOLDER + File.separator + this.themeFolder);
 
-        if (!folder.exists()) {
-            folder.mkdirs();
-
-            if (!folder.exists()) {
-                Log.e("Error", "Could not create folder");
-            }
-
+        if (!this.validateFolder(folder)) {
+            Log.e("Error" , "Could not create folder");
             return false;
         }
 
         String[] files = folder.list();
-
-        if (files.length == 0) { return false; }
 
         boolean backgroundAvailable = false;
         boolean backsideAvailable = false;
@@ -159,5 +124,42 @@ public class Theme {
         }
 
         return backgroundAvailable && backsideAvailable && cardsAvailable;
+    }
+
+    protected boolean validateFolder(File folder) {
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+
+        return folder.exists() && folder.list().length > 0;
+    }
+
+    protected void moveThemeToExternalStorage() throws IOException {
+        String themePath = Memory.THEMES_RESOURCE_FOLDER + File.separator + this.themeFolder;
+        String[] content = this.context.getAssets().list(themePath);
+
+        if (content.length > 0) {
+            for (String filename : content) {
+                this.moveFileToExternalStorage(themePath + File.separator + filename);
+            }
+        }
+    }
+
+    protected void moveFileToExternalStorage(String filename) throws IOException {
+        String basepath = Environment.getExternalStorageDirectory().toString();
+
+        File file = new File(basepath, filename);
+        InputStream is = this.context.getAssets().open(filename);
+        FileOutputStream os = new FileOutputStream(file);
+
+        byte[] buffer = new byte[65536 * 2];
+        int read;
+        while ((read = is.read(buffer)) != -1) {
+            os.write(buffer, 0, read);
+        }
+
+        is.close();
+        os.flush();
+        os.close();
     }
 }

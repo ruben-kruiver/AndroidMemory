@@ -1,4 +1,4 @@
-package nl.mprog.apps.memory.activities;
+package nl.mprog.apps.memory.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import nl.mprog.apps.memory.R;
-import nl.mprog.apps.memory.models.Memory;
+import nl.mprog.apps.memory.model.Memory;
 
 public class MainMenu extends Activity {
 
