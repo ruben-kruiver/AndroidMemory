@@ -13,6 +13,9 @@ public class PracticeGame extends Game {
         for (int i = 0; i < this.getNumberOfCards(); i++) {
             this.addCardToGame(i);
         }
+
+        this.currentTimelimit = this.timeLimit;
+        this.currentMistakesLimit = this.maximumMistakes;
     }
 
     protected Integer getNumberOfCards() {
